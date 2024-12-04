@@ -1,5 +1,6 @@
 package com.abc.cinema.cinema_website;
 
+import com.abc.cinema.cinema_website.service.EmailService;
 import com.abc.cinema.cinema_website.service.PayPalService;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
@@ -8,13 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Map;
 
 @Controller
 public class PaymentController {
 
     @Autowired
     private PayPalService payPalService;
+
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("/pay")
     public String pay(Model model) throws PayPalRESTException {
@@ -38,13 +45,34 @@ public class PaymentController {
         return "redirect:" + payment.getLinks().get(1).getHref();
     }
 
-    @GetMapping("/success")
-    public String success(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId, Model model) {
-        // Handle successful payment
-        // For simplicity, you can confirm payment here.
-        model.addAttribute("message", "Payment Successful! Payment ID: " + paymentId);
-        return "success";
+    @RequestMapping("/success")
+    public String successPayment(@RequestParam Map<String, String> params, Model model) {
+        String paymentId = params.get("paymentId");
+        String payerId = params.get("PayerID");
+
+        try {
+            // Get the payment details and process the payment (as before)
+            Payment payment = payPalService.executePayment(paymentId, payerId);
+            if (payment.getState().equals("approved")) {
+                model.addAttribute("message", "Payment Successful!");
+
+                // Send a payment confirmation email after successful payment
+                String customerEmail = "customer@example.com";  // Retrieve this from the customer details
+                String paymentAmount = payment.getTransactions().get(0).getAmount().getTotal();
+                emailService.sendPaymentConfirmation(customerEmail, paymentAmount);
+
+                return "success";
+            } else {
+                model.addAttribute("message", "Payment not approved.");
+                return "cancel";
+            }
+        } catch (PayPalRESTException e) {
+            model.addAttribute("message", "Error while processing payment.");
+            return "cancel";
+        }
     }
+
+
 
     @GetMapping("/cancel")
     public String cancel(Model model) {

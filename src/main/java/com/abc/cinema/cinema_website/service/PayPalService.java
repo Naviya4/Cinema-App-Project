@@ -50,4 +50,18 @@ public class PayPalService {
 
         return createdPayment;
     }
+
+    public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException {
+        // Set up the APIContext with your PayPal credentials
+        APIContext apiContext = new APIContext(clientId, clientSecret, "sandbox");
+
+        // Create a PaymentExecution instance to execute the payment
+        PaymentExecution paymentExecution = new PaymentExecution();
+        paymentExecution.setPayerId(payerId);
+
+        // Get the Payment by paymentId
+        Payment payment = new Payment();
+        payment.setId(paymentId);
+        return payment.execute(apiContext, paymentExecution);
+    }
 }
