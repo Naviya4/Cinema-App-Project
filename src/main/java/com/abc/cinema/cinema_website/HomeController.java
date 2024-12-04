@@ -1,5 +1,6 @@
 package com.abc.cinema.cinema_website;
 
+import com.abc.cinema.cinema_website.service.EmailService;
 import com.abc.cinema.cinema_website.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,9 @@ public class HomeController {
     @Autowired
     private ReservationService reservationService;
 
+    @Autowired
+    private EmailService emailService;
+
     @RequestMapping("/")
     public String home(){
         return "index";
@@ -23,10 +27,12 @@ public class HomeController {
     @PostMapping("/reserve")
     public String reserveTicket(@RequestParam("movie") String movie,
                                 @RequestParam("seat") String seat,
+                                @RequestParam("email") String email,
                                 Model model) {
         if (reservationService.reserveSeat(seat)) {
             model.addAttribute("movie", movie);
             model.addAttribute("seat", seat);
+            emailService.sendReservationConfirmation(email, movie, seat);
             return "reservation";  // Forward to reservation.jsp
         } else {
             model.addAttribute("error", "Seat " + seat + " is already reserved.");

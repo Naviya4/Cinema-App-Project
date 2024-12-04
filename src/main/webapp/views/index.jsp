@@ -16,6 +16,10 @@
         <input type="text" id="seat" name="seat" placeholder="Enter Seat Number">
         <br><br>
 
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email">
+        <br><br>
+
         <button type="submit">Reserve</button>
     </form>
 </body>
