@@ -11,7 +11,7 @@ import java.util.Set;
 public class ReservationService {
 
     @Autowired
-    private com.abc.cinema.cinema_website.repository.ReservationRepository reservationRepository;
+    private com.abc.cinema.cinema_website.repo.ReservationRepository reservationRepository;
 
     private final Set<String> reservedSeats = new HashSet<>();
 
