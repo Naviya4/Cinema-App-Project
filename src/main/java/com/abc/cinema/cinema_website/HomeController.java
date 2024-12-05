@@ -28,8 +28,9 @@ public class HomeController {
     public String reserveTicket(@RequestParam("movie") String movie,
                                 @RequestParam("seat") String seat,
                                 @RequestParam("email") String email,
+                                @RequestParam("customerName") String customerName, // Add customerName here
                                 Model model) {
-        if (reservationService.reserveSeat(seat)) {
+        if (reservationService.reserveSeat(seat, customerName, movie, email)) {
             model.addAttribute("movie", movie);
             model.addAttribute("seat", seat);
             emailService.sendReservationConfirmation(email, movie, seat);

@@ -6,6 +6,6 @@
 <body>
     <h1>Payment Successful!</h1>
     <p>${message}</p>
-    <a href="/home">Go to Home</a>
+    <a href="/">Go to Home</a>
 </body>
 </html>
