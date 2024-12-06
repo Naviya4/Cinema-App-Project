@@ -39,24 +39,28 @@ public class HomeController {
     public ModelAndView showReservationForm(@RequestParam("movie") String movie) {
         ModelAndView modelAndView = new ModelAndView("reservationForm");
         modelAndView.addObject("selectedMovie", movie); // Pass selected movie to the form
+
+        // Add seat layout to the model
+        String[][] seatLayout = reservationService.getSeatLayout();
+        modelAndView.addObject("seatLayout", seatLayout);
+
         return modelAndView;
     }
 
     @PostMapping("/reserve")
     public String reserveTicket(@RequestParam("movie") String movie,
-                                @RequestParam("seat") String seat,
+                                @RequestParam("seats") List<String> seats,  // Accept a list of selected seats
                                 @RequestParam("email") String email,
-                                @RequestParam("customerName") String customerName, // Add customerName here
+                                @RequestParam("customerName") String customerName,
                                 Model model) {
-        if (reservationService.reserveSeat(seat, customerName, movie, email)) {
+        if (reservationService.reserveSeats(seats, customerName, movie, email)) {
             model.addAttribute("movie", movie);
-            model.addAttribute("seat", seat);
-            emailService.sendReservationConfirmation(email, movie, seat);
+            model.addAttribute("seats", seats);  // Pass the selected seats to the view
+            emailService.sendReservationConfirmation(email, movie, String.join(", ", seats));
             return "reservation";  // Forward to reservation.jsp
         } else {
-            model.addAttribute("error", "Seat " + seat + " is already reserved.");
+            model.addAttribute("error", "One or more selected seats are already reserved.");
             return "error";  // Forward to error.jsp
         }
     }
-
 }
