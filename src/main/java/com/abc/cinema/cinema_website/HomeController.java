@@ -1,14 +1,19 @@
 package com.abc.cinema.cinema_website;
 
+import com.abc.cinema.cinema_website.model.Movie;
 import com.abc.cinema.cinema_website.service.EmailService;
+import com.abc.cinema.cinema_website.service.MovieService;
 import com.abc.cinema.cinema_website.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ui.Model;
+
+import java.util.List;
 
 @Controller
 public class HomeController {
@@ -19,9 +24,22 @@ public class HomeController {
     @Autowired
     private EmailService emailService;
 
-    @RequestMapping("/")
-    public String home(){
-        return "index";
+    @Autowired
+    private MovieService movieService;
+
+    @GetMapping("/")
+    public String home(Model model) {
+        // Fetch the list of showing movies
+        List<Movie> showingMovies = movieService.getAllMovies();
+        model.addAttribute("movies", showingMovies);
+        return "index"; // Show movies on the home page
+    }
+
+    @RequestMapping("/reservationForm")
+    public ModelAndView showReservationForm(@RequestParam("movie") String movie) {
+        ModelAndView modelAndView = new ModelAndView("reservationForm");
+        modelAndView.addObject("selectedMovie", movie); // Pass selected movie to the form
+        return modelAndView;
     }
 
     @PostMapping("/reserve")
