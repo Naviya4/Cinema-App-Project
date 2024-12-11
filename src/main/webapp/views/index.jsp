@@ -53,7 +53,6 @@
             margin: auto;
         }
 
-
         /* Movie box style */
         .movie-box {
             width: 250px;
@@ -110,9 +109,47 @@
         .reserve-btn:hover {
             background-color: #e67e22;
         }
+
+        /* Buttons for navigation */
+        .nav-buttons {
+            position: fixed;
+            top: 50px;
+            right: 50px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-button {
+            background-color: #ff8c00;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .nav-button:hover {
+            background-color: #ffc107;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            margin-top: 30px;
+            color: #aaa;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+        <a href="/feedback" class="nav-button">Add Feedback</a>
+        <a href="/feedbackDashboard" class="nav-button">Feedback Dashboard</a>
+    </div>
+
     <h1>Welcome to <span class="brand">NB</span> Cinema!</h1>
     <h2>Now Showing</h2>
     <div class="movie-container">
@@ -133,5 +170,9 @@
             </div>
         </c:forEach>
     </div>
+
+    <footer>
+        &copy; 2024 Online Movie Ticket Reservation. All rights reserved.
+    </footer>
 </body>
 </html>

@@ -4,8 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
 
 @Entity
 public class CustomerFeedback {
@@ -13,14 +11,10 @@ public class CustomerFeedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String movie;
+    private String customer;
     private int rating;  // Rating from 1 to 5
     private String comments;  // Customer's feedback
 
-    @ManyToOne
-    @JoinColumn(name = "reservation_id")
-    private Reservation reservation;  // Link to reservation
 
     // Getters and Setters
     public Long getId() {
@@ -31,12 +25,12 @@ public class CustomerFeedback {
         this.id = id;
     }
 
-    public String getMovie() {
-        return movie;
+    public String getCustomer() {
+        return customer;
     }
 
-    public void setMovie(String movie) {
-        this.movie = movie;
+    public void setCustomer(String customer) {
+        this.customer = customer;
     }
 
     public int getRating() {
@@ -55,22 +49,13 @@ public class CustomerFeedback {
         this.comments = comments;
     }
 
-    public Reservation getReservation() {
-        return reservation;
-    }
-
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
-    }
-
     @Override
     public String toString() {
         return "CustomerFeedback{" +
                 "id=" + id +
-                ", movie='" + movie + '\'' +
+                ", customer='" + customer + '\'' +
                 ", rating=" + rating +
                 ", comments='" + comments + '\'' +
-                ", reservation=" + reservation +
                 '}';
     }
 }

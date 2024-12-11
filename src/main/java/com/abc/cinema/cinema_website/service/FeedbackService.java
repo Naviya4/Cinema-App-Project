@@ -17,6 +17,7 @@ public class FeedbackService {
     // Save feedback to the database
     public void saveFeedback(FeedbackDTO feedbackDTO) {
         CustomerFeedback feedback = new CustomerFeedback();
+        feedback.setCustomer(feedbackDTO.getCustomer());
         feedback.setRating(feedbackDTO.getRating());
         feedback.setComments(feedbackDTO.getComment());
 
