@@ -28,4 +28,3 @@ public class FeedbackService {
         return feedbackRepository.findAll();
     }
 }
-

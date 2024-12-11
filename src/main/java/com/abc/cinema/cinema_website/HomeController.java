@@ -4,6 +4,7 @@ import com.abc.cinema.cinema_website.model.Movie;
 import com.abc.cinema.cinema_website.service.EmailService;
 import com.abc.cinema.cinema_website.service.MovieService;
 import com.abc.cinema.cinema_website.service.ReservationService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +42,7 @@ public class HomeController {
         modelAndView.addObject("selectedMovie", movie); // Pass selected movie to the form
 
         // Add seat layout to the model
-        String[][] seatLayout = reservationService.getSeatLayout();
+        String[][] seatLayout = reservationService.getSeatLayout(movie);
         modelAndView.addObject("seatLayout", seatLayout);
 
         return modelAndView;
@@ -52,15 +53,26 @@ public class HomeController {
                                 @RequestParam("seats") List<String> seats,  // Accept a list of selected seats
                                 @RequestParam("email") String email,
                                 @RequestParam("customerName") String customerName,
+                                HttpSession session,
                                 Model model) {
-        if (reservationService.reserveSeats(seats, customerName, movie, email)) {
+
+        // Save data in the session
+        session.setAttribute("reservedMovie", movie);
+        session.setAttribute("reservedSeats", seats);
+        session.setAttribute("customerName", customerName);
+        session.setAttribute("customerEmail", email);
+
+        // Just check if the seats are available, without reserving them or sending emails
+        boolean areSeatsAvailable = reservationService.checkSeatsAvailability(seats, movie);
+
+        if (areSeatsAvailable) {
             model.addAttribute("movie", movie);
             model.addAttribute("seats", seats);  // Pass the selected seats to the view
-            emailService.sendReservationConfirmation(email, movie, String.join(", ", seats));
             return "reservation";  // Forward to reservation.jsp
         } else {
             model.addAttribute("error", "One or more selected seats are already reserved.");
             return "error";  // Forward to error.jsp
         }
     }
+
 }
