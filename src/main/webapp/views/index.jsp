@@ -3,7 +3,7 @@
 
 <html>
 <head>
-    <title>Welcome to ABC Cinema!</title>
+    <title>Welcome to NB Cinema!</title>
     <style>
         /* Set background image */
         body {
