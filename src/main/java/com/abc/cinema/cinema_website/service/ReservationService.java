@@ -1,6 +1,7 @@
 package com.abc.cinema.cinema_website.service;
 
 import com.abc.cinema.cinema_website.model.Reservation;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,17 @@ public class ReservationService {
 
     // Map to store reserved seats by movie name
     private final Map<String, Set<String>> reservedSeatsByMovie = new HashMap<>();
+
+    // This method will be called after the ReservationService bean is initialized
+    @PostConstruct
+    public void loadReservedSeats() {
+        List<Reservation> reservations = reservationRepository.findAll();
+        for (Reservation reservation : reservations) {
+            String movieName = reservation.getMovieName();
+            String seat = reservation.getSeat();
+            reservedSeatsByMovie.computeIfAbsent(movieName, k -> new HashSet<>()).add(seat);
+        }
+    }
 
     // Updated to handle multiple seat reservations for specific movies
     public synchronized boolean reserveSeats(List<String> seats, String customerName, String movieName, String email) {
@@ -60,7 +72,7 @@ public class ReservationService {
         String[][] layout = new String[10][10];
 
         // Get the reserved seats for the specific movie
-        Set<String> reservedSeats = reservedSeatsByMovie.getOrDefault(movieName, new HashSet<>());
+        Set<String> reservedSeats = getReservedSeatsForMovie(movieName);
 
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {

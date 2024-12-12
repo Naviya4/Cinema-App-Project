@@ -96,8 +96,8 @@
                 <input type="text" id="customer" name="customer" required/>
             </div>
             <div>
-                <label for="rating">Rating (1-10):</label>
-                <input type="number" id="rating" name="rating" min="1" max="10" required />
+                <label for="rating">Rating (1-5):</label>
+                <input type="number" id="rating" name="rating" min="1" max="5" required />
             </div>
             <div>
                 <label for="comment">Comments:</label>
